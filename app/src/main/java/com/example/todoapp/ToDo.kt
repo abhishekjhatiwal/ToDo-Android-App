@@ -7,7 +7,7 @@ import java.util.Date
 @Entity
 data class ToDo(
     @PrimaryKey(autoGenerate = true)
-    var id: Long=0,
+    var id: Int=0,
     var title: String,
     var createAt: Date
 )

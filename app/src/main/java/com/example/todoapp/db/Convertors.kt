@@ -3,14 +3,26 @@ package com.example.todoapp.db
 import androidx.room.TypeConverter
 import java.util.Date
 
-class Convertors {
+class Converters {
     @TypeConverter
-    fun fromDate(date: Date): Long{
-        return date.time
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { Date(it) }
     }
 
     @TypeConverter
-    fun toDate(Id: Long): Date {
-        return Date(Id)
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
     }
 }
+
+
+//    @TypeConverter
+//    fun fromDate(date: Date): Long{
+//        return date.time
+//    }
+//
+//    @TypeConverter
+//    fun toDate(Id: Long): Date {
+//        return Date(Id)
+//    }
+//}

@@ -1,16 +1,43 @@
 package com.example.todoapp
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.util.Date
 
+
+class ToDoViewModel : ViewModel() {
+    private val todoDao = MainApplication.todoDatabase.getTodoDao()
+
+    val todoList: LiveData<List<ToDo>> = todoDao.getAllTodo()
+
+    fun addTodo(title: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            todoDao.addTodo(
+                ToDo(
+                    title = title,
+                    createAt = Date(System.currentTimeMillis())
+                )
+            )
+        }
+    }
+
+    //    fun deleteTodo(todo: ToDo) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            todoDao.deleteTodo(todo) // pass whole object (if @Delete in DAO)
+//        }
+//    }
+    fun deleteTodo(todo: ToDo) {
+        viewModelScope.launch(Dispatchers.IO) {
+            todoDao.deleteTodo(todo)
+        }
+    }
+}
+
+
+/*
 class ToDoViewModel : ViewModel() {
     // private val _todoList = MutableLiveData<List<ToDo>>()
     val todoDao = MainApplication.todoDatabase.getTodoDao()
@@ -21,9 +48,10 @@ class ToDoViewModel : ViewModel() {
     //        fun getAllTodo() {
 //        _todoList.value = ToDoManager.getAllTodo().reversed()
 //    }
+    @OptIn(DelicateCoroutinesApi::class)
     @RequiresApi(Build.VERSION_CODES.O)
     fun addTodo(title: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             todoDao.addTodo(
                 ToDo(
                     title = title,
@@ -33,10 +61,12 @@ class ToDoViewModel : ViewModel() {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun deleteTodo(todo: ToDo) {
-        viewModelScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             todoDao.deleteTodo(todo.id)
-
         }
     }
 }
+
+ */
